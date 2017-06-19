@@ -1,6 +1,6 @@
 {
   "name": "usercenter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The user center for multiple authentication and keep session with redis",
   "main": "app.js",
   "scripts": {
