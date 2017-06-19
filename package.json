@@ -1,0 +1,26 @@
+{
+  "name": "usercenter",
+  "version": "1.0.1",
+  "description": "The user center for multiple authentication and keep session with redis",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/keel/usercenter.git"
+  },
+  "keywords": [
+    "user",
+    "center",
+    "auth",
+    "session",
+    "redis"
+  ],
+  "author": "Keel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/keel/usercenter/issues"
+  },
+  "homepage": "https://github.com/keel/usercenter#readme"
+}
