@@ -1,0 +1,7 @@
+{
+  "apps": [{
+    "name": "usercenter",
+    "script": "run/usercenter.js",
+    "log_date_format":"YYYY-MM-DD HH:mm:ss"
+  }]
+}
