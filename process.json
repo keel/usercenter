@@ -1,7 +1,7 @@
 {
   "apps": [{
-    "name": "usercenter",
-    "script": "run/usercenter.js",
+    "name": "passport",
+    "script": "run/passport.js",
     "log_date_format":"YYYY-MM-DD HH:mm:ss"
   }]
 }

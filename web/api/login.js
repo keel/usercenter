@@ -2,62 +2,68 @@
 登录的api
  */
 'use strict';
-var cck = require('cck');
-var kc = require('kc');
-var iApi = kc.iApi;
-var render = kc.render();
-var db = kc.mongo;
-var error = require('../error');
-var sessionAuth = kc.sessionAuth;
-var vlog = require('vlog').instance(__filename);
+const cck = require('cck');
+const kc = require('kc');
+const iApi = kc.iApi;
+const render = kc.render();
+const fail2ban = kc.fail2ban;
+const error = require('../error');
+const sessionAuth = kc.sessionAuth;
+const vlog = require('vlog').instance(__filename);
+// const authenticator = require('authenticator');
 
-var showLevel = 0;
-var ueserTable = 'userapi';
+const showLevel = 0;
+const kconfig = kc.kconfig;
+const apiKey = kconfig.get('s$_apiKey') || 'test_client_key';
 
-var login = function(req, resp, callback) {
-  var reqDataArr = iApi.parseApiReq(req.body, 'test_client_key');
-  // vlog.log('reqData:%j',reqData);
-  if (reqDataArr[0] !== 0) {
-    return callback(null, { 're': reqDataArr[0] });
+
+const checkUserPwd = function checkUserPwd(reqData, user) {
+  if (!user) {
+    return false;
   }
-  var reqData = reqDataArr[1];
-  var query = {
-    'loginName': reqData.loginName,
-    'loginPwd': reqData.loginPwd,
-    'state': {
-      '$gte': 0
-    }
-  };
-  var options = {
-    'fields': {
-      'userName': 1,
-      'level': 1
-    }
-  };
-  // vlog.log('body:%j,options:%j', reqData, options);
-  db.queryOneFromDb(ueserTable, query, options, function(err, re) {
+  if (user.loginPwd) {
+    return user.loginPwd === reqData.loginPwd;
+  }
+  // if (user.k) {
+  //   return authenticator.verifyToken(user.k, reqData.loginPwd);
+  // }
+  vlog.error('无此登录方式! req:%j', reqData);
+  return false;
+};
+
+const login = function(req, resp, callback) {
+  const reqDataArr = iApi.parseApiReq(req.body, apiKey);
+  // vlog.log('reqDataArr:%j', reqDataArr);
+  if (reqDataArr[0] !== 0) {
+    return callback(vlog.ee(new Error('iApi req'), 'kc iApi req error', reqDataArr), null, 200, reqDataArr[0]);
+  }
+  const reqData = reqDataArr[1];
+  fail2ban.checkBan(reqData.loginName, (err, waitHours) => {
     if (err) {
-      return callback(vlog.ee(err, 'login:queryOneFromDb', reqData));
+      return callback(null, error.json('fail2ban', '登录失败次数过多，请等待 ' + waitHours + ' 小时后重试.'), 200);
     }
-    if (!re) {
-      return callback(null, error.json('auth', '用户名密码验证失败，请重试.'), 403);
+    const user = kconfig.get('h$_users')[reqData.loginName];
+    if (!checkUserPwd(reqData, user)) {
+      fail2ban.failOne(reqData.loginName);
+      return callback(null, error.json('auth', '用户名密码验证失败，请重试.'), 200);
     }
-    sessionAuth.setAuthed(req, resp, re._id, re.level, function(err, re) {
+    fail2ban.clear(reqData.loginName);
+    sessionAuth.setAuthed(req, resp, reqData.loginName, user.level, function(err, re) {
       if (err) {
-        return callback(vlog.ee(err, 'login:setAuthed', reqData), re, 500, 'cache');
+        return callback(vlog.ee(err, 'login:setAuthed', reqData), re, 500, 'session');
       }
       callback(null, { 're': '0' });
     });
   });
 };
 
-var inputCheck = function(input) {
-  var re = cck.check(input, 'strLen', [3, 18]);
+const inputCheck = function(input) {
+  const re = cck.check(input, 'strLen', [3, 18]);
   return re;
 };
 
 
-var iiConfig = {
+const iiConfig = {
   'auth': false,
   'act': {
     //空字符串表示仅有一个顶级动作,无二级动作
@@ -76,9 +82,9 @@ var iiConfig = {
 
 exports.router = function() {
 
-  var router = iApi.getRouter(iiConfig);
+  const router = iApi.getRouter(iiConfig);
 
-  router.get('*', function(req, resp, next) {
+  router.get('*', function(req, resp, next) { // eslint-disable-line
     resp.send(render.login());
     // if (req.userLevel < showLevel) {
     //   resp.status(404).send('40401');

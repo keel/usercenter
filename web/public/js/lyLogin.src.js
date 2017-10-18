@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand,prefer-const,no-var */
 'use strict';
 
 $(function() {
@@ -24,9 +25,9 @@ $(function() {
       alert('用户名输入错误');
       return false;
     }
-    var reqData = makeApiReq('login', data, 'test_client_key');
+    var reqData = makeApiReq('login', data);
     // console.log('reqData:', reqData);
-    jsonReq('login', reqData, function(err, re) {
+    jsonReq('login', reqData,null, function(err, re) {
       if (err || !re.re) {
         alert('登录失败!');
         return false;
@@ -35,7 +36,7 @@ $(function() {
         window.location = 'main';
         return false;
       } else {
-        alert('登录失败!');
+        alert('登录失败!'+ (re.data || ''));
         return false;
       }
     });

@@ -8,26 +8,30 @@
     "deploy-tar": "tar -zcf deploy/deploy.tar.gz --exclude={deploy,test,'.git'} ./",
     "deploy": "npm run deploy-clear && npm run deploy-tar",
     "test": "mocha",
-    "start": "pm2 startOrRestart process.json"
+    "start": "pm2 startOrRestart process.json",
+    "lint": "eslint lib/*.js web/api/*.js"
   },
   "dependencies": {
-    "kc": "^1.0.53",
+    "aes-cross": "^1.0.8",
+    "authenticator": "^1.1.2",
     "body-parser": "^1.13.2",
     "bson": "^0.4.20",
-    "dot": "^1.0.3",
-    "express": "^4.13.4",
     "cck": "^1.0.12",
+    "dot": "^1.0.3",
+    "express": "^4.15.4",
+    "kc": "^2.0.30",
+    "ktool": "^1.0.17",
+    "mongodb": "^2.2.31",
+    "oauth2-server": "^2.4.1",
+    "passport": "^0.4.0",
+    "passport-wechat": "^2.0.4",
+    "redis": "^2.8.0",
     "vlog": "^0.2.5",
-    "aes-cross": "^1.0.8",
-    "ktool": "^0.2.42",
-    "mongodb": "~2.1.x",
-    "redis": "~2.6.0-0",
-    "mysql": "^2.11.1",
-    "xml2js": "^0.4.9"
+    "xml2js": "^0.4.18"
   },
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*"
+    "chai": "^4.1.1",
+    "mocha": "^3.5.0"
   },
   "repository": {
     "type": "git",

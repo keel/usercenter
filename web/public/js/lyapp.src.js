@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand,prefer-const,no-var */
 'use strict';
 
 var lyTimeStamp = function() {
@@ -26,23 +27,23 @@ var mkSign = function(data, key) {
     str += '&' + pArr[i];
   }
   str = str.substring(1) + '&key=' + key;
-  // vlog.log('str:%s',str);
+  // console.log(str);
   return hex_md5(str);
 };
-var makeApiReq = function(method, data, key, appCode, channel, ver) {
+var makeApiReq = function(method, data, appCode, channel, ver) {
   var timeStamp = lyTimeStamp();
   var v = (ver || '0');
   var a = (appCode || 'dev');
   var c = (channel || '10010');
   var reqData = {
     'v': v,
-    'm': method,
+    'm': method || 'default',
     'a': a,
     'c': c,
     't': timeStamp,
     'req': data
   };
-  var sign = mkSign(reqData, key);
+  var sign = mkSign(reqData, 'nEh2CZ7npahS7QCG');
   reqData.s = sign;
   return JSON.stringify(reqData);
 };
@@ -101,11 +102,7 @@ var asDom = function(content, domName) {
   return ['<', domName, '>', content, '</', domName, '>'].join('');
 };
 
-/*
-titleMap = {'phone':'手机号','productID':'产品ID','state':'状态','[order]':['phone','state','productID']} //指定顺序
-titleMap = {'phone':'手机号','productID':'产品ID','state':'状态'} //不指定
-cellFnMap = {'productID':function(key,content){return '<a href="/product/'+content+'">'+content+'</a>';}}
- */
+
 var showTable = function(titleMap, rowJson, cellFnMap) {
   var tb = '<div class="table-responsive"><table class="table dataTable"><thead><tr>';
   var titleOrder = titleMap['[order]'];
@@ -139,17 +136,6 @@ var showTable = function(titleMap, rowJson, cellFnMap) {
   return tb;
 };
 
-/**
- * to millisecond
- * @param  {int} year
- * @param  {int} month
- * @param  {int} day
- * @param  {int} [hour]
- * @param  {int} [min]
- * @param  {int} [sec]
- * @param  {int} [millisecond]
- * @return {int}
- */
 var timeToMS = function(year, month, day, hour, min, sec, ms) {
   var d = new Date();
   d.setFullYear(year, month - 1, day);
@@ -161,11 +147,7 @@ var timeToMS = function(year, month, day, hour, min, sec, ms) {
 var twoInt = function(int) {
   return (int < 10) ? '0' + int : int;
 };
-/**
- * millisecond to 'yyyy-MM-dd hh:mm:ss'
- * @param  {int} millSeccond
- * @return {string}
- */
+
 var msToTime = function(millSec) {
   var d = millSec ? new Date(millSec) : new Date();
   var re = d.getFullYear() + '-' + twoInt(d.getMonth() + 1) + '-' + twoInt(d.getDate()) + ' ' + twoInt(d.getHours()) + ':' + twoInt(d.getMinutes()) + ':' + twoInt(d.getSeconds());
@@ -184,8 +166,6 @@ var checkStrLen = function(strIn, min, max) {
   }
   return true;
 };
-
-
 
 
 /* 以下为md5 */

@@ -1,4 +1,71 @@
 
 plan:
-  ☐ 设计登录认证接口和主功能，用户名密码
-  ☐ 微信登录
+  ☐ 实现用户的注册、登录、忘记密码、密码加密、用户激活、用户禁止等基础服务
+  ☐ session机制，密码加密，登录行为异常判定
+  ☐ 微信等第三方登录，绑定，全局用户ID
+  ☐ OAUTH2接口实现，APP登录
+  ☐ 匿名用户,对于手机端，可建立一个ID绑定其IMEI号（先判定为正常IMEI），以此记录用户行为并引导其注册
+
+
+step:
+  ☐ 设计接口
+  ☐ 数据存储，核心逻辑设计
+  ☐
+
+ 接口:
+
+reg:
+  i:fromApp,fromId,userName,userPwd,phone
+  o:code,desc,data(error info)
+
+  anonymousReg
+  autoReg
+
+auth:
+  i:authType,userName,userPwd/token/key,sec
+  o:userId,userType,userLevel,userName
+
+refresh token
+
+forget:
+  i:email/phone
+  o:resetUrl
+
+  i:resetCode
+  o:newPwdSetted
+
+active:
+  i:email/phone
+
+  o:activeUrl
+
+  i:token
+  o:activeRe
+
+ban:
+  多次认证失败等异步后自动ban用户一段时间
+  ban策略配置
+
+  i:userId,banReason,banTime
+  o:banRe
+
+bind:
+  i:fromChannel,fromId,userId,token,oldId
+  o:bindRe
+
+
+附属接口:
+
+  appAdmin:认证渠道管理,curd
+  appId,appKey,sec管理
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+{
+  "ver": 1,
+  "project": "usercenter",
+  "ts": 0,
+  "h$_key":"t4PRD2nwDkiDVMp6",
+  "s$_sessionKey": "nEh2CZ7npahS7QCG",
+  "sessionExpire": 1800,
+  "sessionType": "redis",
+  "failLoginRedirect": "/login",
+  "fail2ban": 10800,
+  "fail2banTimes": 5,
+  "s$_apiKey": "nEh2CZ7npahS7QCG",
+  "redis": {
+    "init": true,
+    "s$_redisIP": "127.0.0.1",
+    "s$_redisPort": 6379,
+    "s$_pwd": false
+  },
+  "mongo": {
+    "init": true,
+    "s$_mongoDbName": "uc",
+    "s$_mongoUrl": "mongodb://uc1:uc1234@127.0.0.1:27017/uc"
+  },
+  "h$_users": {
+    "dbConsole":{
+      "level": 10,
+      "loginPwd":"lykj0107",
+      "mongodb":{
+         "lysms":{
+            "*": 3
+         },
+         "apis":{
+           "*": 3
+         }
+      }
+    }
+  },
+  "startPort": 15020
+}
